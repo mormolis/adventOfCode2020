@@ -28,16 +28,20 @@ public class FileReader {
         }
     }
 
-    public List<String> getAsListOfStringsWithSeparator(URI uri, String separator) {
+    public List<String> getAsListOfStringsWithSeparator(URI uri, String separator, String replacer) {
         Path path = Paths.get(uri);
         try {
             return Arrays.stream(Files.readString(path)
                     .split(separator))
-                    .map(entry -> entry.replace('\n', ' '))
+                    .map(entry -> entry.replace("\n", replacer))
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException("Could not read lines");
         }
+    }
+
+    public List<String> getAsListOfStringsWithSeparator(URI uri, String separator) {
+        return getAsListOfStringsWithSeparator(uri,separator," ");
     }
 
 
