@@ -1,59 +1,31 @@
 package day7;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class BagCalculator {
 
-    private final ConcurrentHashMap<String, Integer> tree = new ConcurrentHashMap<>();
+    private final ArrayDeque<Bag> stackOfBags = new ArrayDeque<>();
+    private final ArrayDeque<Integer> stackOfNumbers = new ArrayDeque<>();
 
-    public long bagsWithinGoldenBags(List<BagRules> rules) {
-
-        tree.putAll(
-                rules.stream().filter(rule -> "shiny gold".equals(rule.getMainBag()))
-                        .map(BagRules::getContains)
-                        .findFirst() // given from the problem description (single shiny bag)
-                        .orElseThrow(() -> new RuntimeException("No Shiny Bags found"))
-        );
-
-        populateTree(rules);
-        System.out.println(tree);
-        return tree.values().stream().reduce(0, Integer::sum);
-
-    }
-
-    private void populateTree(List<BagRules> rules) {
-        final Set<Map.Entry<String, Integer>> entries = tree.entrySet();
-        Map<String, Integer> toGoToTheTree = new HashMap<>(tree);
-        for (Map.Entry<String, Integer> entry : entries) {
-            final Map<String, Integer> mustContain = findRuleMultipliedBy(entry.getKey(), entry.getValue(), rules);
-            toGoToTheTree.putAll(mustContain);
-        }
-        if (tree.size() == toGoToTheTree.size()) {
-            return;
-        }
-        tree.putAll(toGoToTheTree);
-        populateTree(rules);
-    }
-
-    private Map<String, Integer> findRuleMultipliedBy(String bag, int multiplier, List<BagRules> rules) {
-        for (BagRules rule : rules) {
-            if (rule.getMainBag().equals(bag)) {
-                final Map<String, Integer> contains = rule.getContains();
-                return multiplyValuesWith(multiplier, contains);
+    public int bagsWithinGoldenBags(List<BagRules> rules) {
+        stackOfBags.push(new Bag("shiny gold", 1));
+        stackOfNumbers.push(1);
+        while(!stackOfBags.isEmpty()) {
+            final Bag bagToCheck = stackOfBags.pop();
+            for(BagRules rule : rules){
+                if(rule.getMainBag().equals(bagToCheck.getName())){
+                    final Map<String, Integer> contains = rule.getContains();
+                    for(Map.Entry<String,Integer> bag : contains.entrySet()){
+                        stackOfBags.push(new Bag(bag.getKey(), bag.getValue() * bagToCheck.getCapacity()));
+                        stackOfNumbers.push(bag.getValue()* bagToCheck.getCapacity());
+                    }
+                }
             }
         }
-        System.out.println("empty rule!!!!");
-        return new HashMap<>();
-    }
 
-    private Map<String, Integer> multiplyValuesWith(int multiplier, Map<String, Integer> contains) {
-        Map<String, Integer> multiplied = new HashMap<>();
-        final Set<Map.Entry<String, Integer>> entries = contains.entrySet();
-        for (Map.Entry<String, Integer> entry : entries) {
-            multiplied.put(entry.getKey(), entry.getValue() * multiplier);
-        }
-        return multiplied;
+        // -1 the initial shiny bag
+        return stackOfNumbers.stream().reduce(1, Integer::sum) - 1;
+
     }
 
 
