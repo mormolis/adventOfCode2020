@@ -42,19 +42,12 @@ public class Instruction {
             throw new UnsupportedOperationException("cannot change accumulator");
         }
         if (isJump()) {
-            System.out.print("2. setting to nop.. ");
             this.instruction = InstructionType.nop;
-            System.out.println("set: " + this.instruction);
-            System.out.println(this);
-        }
-        if (isNoOpp()) {
+        } else if (isNoOpp()) {
             this.instruction = InstructionType.jmp;
         }
     }
 
-    public InstructionType getInstruction() {
-        return instruction;
-    }
 
     public int getValue() {
         return value;

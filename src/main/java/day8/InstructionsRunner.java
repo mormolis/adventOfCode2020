@@ -6,16 +6,10 @@ import java.util.stream.Collectors;
 public class InstructionsRunner {
 
     public static final int THRESHOLD = 100;
-    public final  List<Instruction> instructions;
 
-
-    public InstructionsRunner(List<String> instructions) {
-        this.instructions = parseInstructions(instructions);
-    }
-
-
-    public int swapAndCount() {
-        correctInstructions();
+    public int swapAndCount(List<String> instructionLines) {
+        final List<Instruction> instructions = parseInstructions(instructionLines);
+        correctInstructions(instructions);
         int accSum = 0;
         for (int i = 0; i < instructions.size(); i++) {
             final Instruction instruction = instructions.get(i);
@@ -29,36 +23,17 @@ public class InstructionsRunner {
         return accSum;
     }
 
-    private void correctInstructions() {
-        for (int i = 0; i < instructions.size(); i++) {
-            Instruction instruction = instructions.get(i);
-            if (instruction.isJump()) {
-                System.out.println("1. instruction found as jmp: " + instruction + " - switching ");
+    private void correctInstructions(List<Instruction> instructions) {
+        for (Instruction instruction : instructions) {
+            if (instruction.isJump() || instruction.isNoOpp()) {
                 instruction.switchInstruction();
-                System.out.println("changed: " + instruction);
-                if (isInfinite(instructions)) {
-                    instruction.switchInstruction();
-                    continue;
-                } else {
-                    System.out.println("changed jmp: " + i);
-                    break;
-                }
-            }
-
-
-            if (instruction.isNoOpp()) {
-                instruction.switchInstruction();
-                System.out.println("changed: " + instruction);
-
                 if (isInfinite(instructions)) {
                     instruction.switchInstruction();
                 } else {
-                    System.out.println("changed nop: " + i);
                     break;
                 }
             }
         }
-        System.out.println("returning instructions...");
     }
 
     private boolean isInfinite(List<Instruction> instructions) {
@@ -67,14 +42,12 @@ public class InstructionsRunner {
             final Instruction instruction = instructions.get(i);
             instruction.execute();
             if (instruction.hasThresholdReached(THRESHOLD)) {
-                System.out.println("is infinite...");
                 return true;
             }
             if (instruction.isJump()) {
                 i = i + instruction.getValue() - 1;
             }
         }
-        System.out.println("*****************************************************************************************88");
         return false;
     }
 

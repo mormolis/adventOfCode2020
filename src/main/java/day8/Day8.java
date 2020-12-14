@@ -13,8 +13,8 @@ public class Day8 {
         URI instructionsUri = Day8.class.getClassLoader().getResource("day8/instructions").toURI();
         final List<String> asListOfStrings = fileReader.getAsListOfStrings(instructionsUri);
 
-        InstructionsRunner instructionsRunner = new InstructionsRunner(asListOfStrings);
-//        System.out.println(instructionsRunner.accumulatorValueSecondTimeInstruction(asListOfStrings)); //1859
-        System.out.println(instructionsRunner.swapAndCount());
+        InstructionsRunner instructionsRunner = new InstructionsRunner();
+        System.out.println(instructionsRunner.accumulatorValueSecondTimeInstruction(asListOfStrings)); //1859
+        System.out.println(instructionsRunner.swapAndCount(asListOfStrings)); // 1235
     }
 }
