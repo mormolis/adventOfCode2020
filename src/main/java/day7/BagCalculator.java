@@ -8,7 +8,7 @@ public class BagCalculator {
     private final ArrayDeque<Integer> stackOfNumbers = new ArrayDeque<>();
 
     public int bagsWithinGoldenBags(List<BagRules> rules) {
-        stackOfBags.push(new Bag("shiny gold", 1));
+        stackOfBags.push(new Bag("shiny gold", 1)); // given from problem description "single shiny bag"
         stackOfNumbers.push(1);
         while(!stackOfBags.isEmpty()) {
             final Bag bagToCheck = stackOfBags.pop();
