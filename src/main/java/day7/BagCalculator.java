@@ -4,9 +4,8 @@ import java.util.*;
 
 public class BagCalculator {
 
-    private final ArrayDeque<Bag> stackOfBags = new ArrayDeque<>();
-
     public int bagsWithinGoldenBags(List<BagRules> rules) {
+        final ArrayDeque<Bag> stackOfBags = new ArrayDeque<>();
         stackOfBags.push(new Bag("shiny gold", 1)); // given from problem description "single shiny bag"
         int total = 1;
         while (!stackOfBags.isEmpty()) {
