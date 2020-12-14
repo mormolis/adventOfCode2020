@@ -5,27 +5,23 @@ import java.util.*;
 public class BagCalculator {
 
     private final ArrayDeque<Bag> stackOfBags = new ArrayDeque<>();
-    private final ArrayDeque<Integer> stackOfNumbers = new ArrayDeque<>();
 
     public int bagsWithinGoldenBags(List<BagRules> rules) {
         stackOfBags.push(new Bag("shiny gold", 1)); // given from problem description "single shiny bag"
-        stackOfNumbers.push(1);
-        while(!stackOfBags.isEmpty()) {
+        int total = 1;
+        while (!stackOfBags.isEmpty()) {
             final Bag bagToCheck = stackOfBags.pop();
-            for(BagRules rule : rules){
-                if(rule.getMainBag().equals(bagToCheck.getName())){
+            for (BagRules rule : rules) {
+                if (rule.getMainBag().equals(bagToCheck.getName())) {
                     final Map<String, Integer> contains = rule.getContains();
-                    for(Map.Entry<String,Integer> bag : contains.entrySet()){
+                    for (Map.Entry<String, Integer> bag : contains.entrySet()) {
                         stackOfBags.push(new Bag(bag.getKey(), bag.getValue() * bagToCheck.getCapacity()));
-                        stackOfNumbers.push(bag.getValue()* bagToCheck.getCapacity());
+                        total += bag.getValue() * bagToCheck.getCapacity();
                     }
                 }
             }
         }
-
-        // -1 the initial shiny bag
-        return stackOfNumbers.stream().reduce(1, Integer::sum) - 1;
-
+        return total;
     }
 
 
