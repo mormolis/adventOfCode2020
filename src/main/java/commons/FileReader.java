@@ -19,6 +19,13 @@ public class FileReader {
 
     }
 
+    public List<Long> getAsListOfLongs(URI uri) {
+        return getAsListOfStrings(uri).stream()
+                .map(Long::parseLong)
+                .collect(Collectors.toList());
+
+    }
+
     public List<String> getAsListOfStrings(URI uri) {
         Path path = Paths.get(uri);
         try {
