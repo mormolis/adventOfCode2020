@@ -5,8 +5,6 @@ import java.util.stream.Collectors;
 
 public class InstructionsRunner {
 
-    public static final int THRESHOLD = 100;
-
     public int swapAndCount(List<String> instructionLines) {
         final List<Instruction> instructions = parseInstructions(instructionLines);
         correctInstructions(instructions);
@@ -36,17 +34,19 @@ public class InstructionsRunner {
         }
     }
 
-    private boolean isInfinite(List<Instruction> instructions) {
+    private boolean isInfinite(List<Instruction> instructions){
         resetExecutions(instructions);
         for (int i = 0; i < instructions.size(); i++) {
             final Instruction instruction = instructions.get(i);
-            instruction.execute();
-            if (instruction.hasThresholdReached(THRESHOLD)) {
+
+            if (instruction.hasBeenExecuted()) {
                 return true;
             }
+
             if (instruction.isJump()) {
                 i = i + instruction.getValue() - 1;
             }
+            instruction.execute();
         }
         return false;
     }

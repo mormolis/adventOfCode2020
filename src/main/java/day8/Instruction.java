@@ -60,10 +60,6 @@ public class Instruction {
                 +value + ' ' + timesExecuted;
     }
 
-    public boolean hasThresholdReached(int threshold) {
-        return timesExecuted >= threshold;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,5 +76,4 @@ public class Instruction {
 
 enum InstructionType {
     jmp, nop, acc
-
 }
