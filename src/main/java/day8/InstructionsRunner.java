@@ -7,48 +7,37 @@ public class InstructionsRunner {
 
     public int swapAndCount(List<String> instructionLines) {
         final List<Instruction> instructions = parseInstructions(instructionLines);
-        correctInstructions(instructions);
-        int accSum = 0;
-        for (int i = 0; i < instructions.size(); i++) {
-            final Instruction instruction = instructions.get(i);
-            if (instruction.isAccumulator()) {
-                accSum += instruction.getValue();
-            }
-            if (instruction.isJump()) {
-                i = i + instruction.getValue() - 1;
-            }
-        }
-        return accSum;
-    }
-
-    private void correctInstructions(List<Instruction> instructions) {
         for (Instruction instruction : instructions) {
             if (instruction.isJump() || instruction.isNoOpp()) {
                 instruction.switchInstruction();
-                if (isInfinite(instructions)) {
+                final int accSum = returnAccumulatorSumWhenNotInfinite(instructions);
+                if (accSum == -1) {
                     instruction.switchInstruction();
                 } else {
-                    break;
+                    return accSum;
                 }
             }
         }
+        throw new RuntimeException("No instruction could fix the infinite loop");
     }
 
-    private boolean isInfinite(List<Instruction> instructions){
+    private int returnAccumulatorSumWhenNotInfinite(List<Instruction> instructions){
         resetExecutions(instructions);
+        int accSum = 0;
         for (int i = 0; i < instructions.size(); i++) {
             final Instruction instruction = instructions.get(i);
-
             if (instruction.hasBeenExecuted()) {
-                return true;
+                return -1; //indication of infinite loop
             }
-
             if (instruction.isJump()) {
                 i = i + instruction.getValue() - 1;
             }
+            if (instruction.isAccumulator()) {
+                accSum += instruction.getValue();
+            }
             instruction.execute();
         }
-        return false;
+        return accSum;
     }
 
     private void resetExecutions(List<Instruction> instructions) {
