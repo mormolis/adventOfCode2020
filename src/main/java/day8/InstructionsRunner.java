@@ -11,7 +11,7 @@ public class InstructionsRunner {
             if (instruction.isJump() || instruction.isNoOpp()) {
                 instruction.switchInstruction();
                 final int accSum = returnAccumulatorSumWhenNotInfinite(instructions);
-                if (accSum == -1) {
+                if (accSum == -1) { //indication of infinite loop, switch instruction back and find the next candidate
                     instruction.switchInstruction();
                 } else {
                     return accSum;
