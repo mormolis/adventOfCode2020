@@ -5,24 +5,24 @@ import java.util.Objects;
 public class Instruction {
     private InstructionType instruction;
     private final int value;
-    private int timesExecuted;
+    private boolean hasBeenExecuted;
 
     public Instruction(InstructionType instruction, int value) {
         this.instruction = instruction;
         this.value = value;
-        this.timesExecuted = 0;
+        this.hasBeenExecuted = false;
     }
 
     public void resetExecution() {
-        timesExecuted = 0;
+        hasBeenExecuted = false;
     }
 
     public void execute() {
-        timesExecuted++;
+        hasBeenExecuted = true;
     }
 
     public boolean hasBeenExecuted() {
-        return timesExecuted > 0;
+        return hasBeenExecuted;
     }
 
     public boolean isAccumulator() {
@@ -57,7 +57,7 @@ public class Instruction {
     public String toString() {
         return "Instruction " + "(" + super.toString() + ") -> "
                 + instruction + ' ' +
-                +value + ' ' + timesExecuted;
+                +value + ' ' + hasBeenExecuted;
     }
 
     @Override
@@ -65,12 +65,12 @@ public class Instruction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Instruction that = (Instruction) o;
-        return value == that.value && timesExecuted == that.timesExecuted && Objects.equals(instruction, that.instruction);
+        return value == that.value && hasBeenExecuted == that.hasBeenExecuted && Objects.equals(instruction, that.instruction);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(instruction, value, timesExecuted);
+        return Objects.hash(instruction, value, hasBeenExecuted);
     }
 }
 
